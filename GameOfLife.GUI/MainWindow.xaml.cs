@@ -20,7 +20,7 @@ namespace GameOfLife.GUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const int GRID_SIZE = 40;
+        private const int GRID_SIZE = 80;
         private GameBoard _board;
         private Timer _timer;
 
@@ -47,14 +47,26 @@ namespace GameOfLife.GUI
                 for (int y = 0; y < GRID_SIZE; y++)
                 {
                     Ellipse ellipse = new Ellipse();
-                    ellipse.Width = 20;
-                    ellipse.Height = 20;
+                    ellipse.Width = 10;
+                    ellipse.Height = 10;
+                    ellipse.Margin = new Thickness(1, 1, 1, 1);
                     ellipse.Fill = Brushes.Blue;
                     ellipse.DataContext = _board.GetCell(x, y);
                     ellipse.SetBinding(OpacityProperty, "Alive");
                     Grid.SetRow(ellipse, y);
                     Grid.SetColumn(ellipse, x);
 
+                    Rectangle bounds = new Rectangle();
+                    bounds.Fill = Brushes.White;
+                    bounds.Stroke = Brushes.Black;
+                    bounds.Margin = new Thickness(1, 1, 1, 1);
+                    bounds.StrokeThickness = 1;
+                    bounds.Width = 10;
+                    bounds.Height = 10;
+                    Grid.SetRow(bounds, y);
+                    Grid.SetColumn(bounds, x);
+
+                    Board.Children.Add(bounds);
                     Board.Children.Add(ellipse);
                 }
             }
@@ -64,6 +76,7 @@ namespace GameOfLife.GUI
             {
                 _board.StepSimulation();
             };
+            StepSimulationBtn.IsEnabled = ClearBoardBtn.IsEnabled = !_timer.Enabled;
         }
 
         private void Board_MouseUp(object sender, MouseButtonEventArgs e)
@@ -85,6 +98,19 @@ namespace GameOfLife.GUI
                 _timer.Start();
 
             ToggleSimulationBtn.Content = _timer.Enabled ? "Stop" : "Start";
+            StepSimulationBtn.IsEnabled = ClearBoardBtn.IsEnabled = !_timer.Enabled;
+        }
+
+        private void StepSimulationBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (!_timer.Enabled)
+                _board.StepSimulation();
+        }
+
+        private void ClearBoardBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (!_timer.Enabled)
+                _board.Clear();
         }
 
 

@@ -11,6 +11,8 @@
         <!-- FIRST ROW -->
         <DockPanel HorizontalAlignment="Left" Grid.Row="0">
             <Button DockPanel.Dock="Left" Width="80" Name="ToggleSimulationBtn" Click="ToggleSimulationBtn_Click">Start</Button>
+            <Button Width="80" Name="StepSimulationBtn" Click="StepSimulationBtn_Click">Step</Button>
+            <Button Width="80" Name="ClearBoardBtn" Click="ClearBoardBtn_Click">Clear</Button>
         </DockPanel>
         
         <!-- SECOND ROW -->
