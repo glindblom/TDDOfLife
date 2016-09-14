@@ -71,6 +71,14 @@ namespace GameOfLife.GUI
                 }
             }
 
+            _board.PropertyChanged += (s, e) =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    GenerationCountLbl.Content = string.Format("Generation: {0}", (s as GameBoard).Generation);
+                });
+            };
+
             _timer = new Timer(200);
             _timer.Elapsed += (s, e) =>
             {

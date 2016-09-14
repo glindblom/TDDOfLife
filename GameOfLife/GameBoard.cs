@@ -1,20 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GameOfLife
 {
-    public class GameBoard
+    public class GameBoard : INotifyPropertyChanged
     {
         private Cell[] _cells;
         private int _width, _height;
+        private int _generation;
+
+        public int Generation {
+            get { return _generation; }
+            private set
+            {
+                NotifyPropertyChanged("Generation");
+                _generation = value;
+            }
+        }
 
         public GameBoard(int width, int height)
         {
             _width = width;
             _height = height;
+            Generation = 0;
 
             Initialize();
         }
@@ -44,6 +56,7 @@ namespace GameOfLife
         public void Clear()
         {
             _cells = _cells.Select(x => { x.Alive = false; return x; }).ToArray();
+            Generation = 0;
         }
 
         public void StepSimulation()
@@ -82,12 +95,20 @@ namespace GameOfLife
 
             for (int i = 0; i < _cells.Length; i++)
                 _cells[i].Alive = nextGen[i];
+            Generation++;
         }
 
         private bool CoordinatesWithinBoard(int x, int y)
         {
             if (x < 0 || x >= _width || y < 0 || y >= _height) return false;
             return true;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
